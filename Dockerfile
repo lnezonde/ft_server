@@ -1,6 +1,6 @@
-FROM debian:buster	
+FROM debian:buster
 
-MAINTAINER lnezonde <lnezonde@student.42.fr>
+#MAINTAINER lnezonde <lnezonde@student.42.fr>
 
 COPY srcs /srcs
 
@@ -10,13 +10,13 @@ RUN apt-get update && apt-get upgrade -y \
 
 #nginx
 RUN apt-get install nginx -y \
-&& mkdir -p /var/www/159.65.67.78/html \
-&& chown -R $USER:$USER /var/www/159.65.67.78/html \
-&& chmod -R 755 /var/www/159.65.67.78 \
+&& mkdir -p /var/www/localhost/html \
+&& chown -R $USER:$USER /var/www/localhost/html \
+&& chmod -R 755 /var/www/localhost \
 && cp srcs/self-signed.conf /etc/nginx/snippets/ \
-&& cp srcs/index.html /var/www/159.65.67.78/html/ \
-&& cp srcs/159.65.67.78 /etc/nginx/sites-available/ \
-&& ln -s /etc/nginx/sites-available/159.65.67.78 /etc/nginx/sites-enabled/
+&& cp srcs/index.html /var/www/localhost/html/ \
+&& cp srcs/localhost /etc/nginx/sites-available/ \
+&& ln -s /etc/nginx/sites-available/localhost /etc/nginx/sites-enabled/
 
 #mysql
 RUN apt-get install mariadb-server -y \
@@ -34,14 +34,14 @@ RUN wget https://files.phpmyadmin.net/phpMyAdmin/4.9.2/phpMyAdmin-4.9.2-english.
 && cp /srcs/config.inc.php /usr/share/phpmyadmin/ && rm /usr/share/phpmyadmin/config.sample.inc.php \
 && service mysql start \
 && mysql < /usr/share/phpmyadmin/sql/create_tables.sql && mysql < /srcs/pma.sql \
-&& ln -s /usr/share/phpmyadmin /var/www/159.65.67.78/html/phpmyadmin 
+&& ln -s /usr/share/phpmyadmin /var/www/localhost/html/phpmyadmin
 
 #wordpress
 RUN tar zxvf /srcs/wordpress.tar.gz \
 && cp /srcs/wp-config.php wordpress/ && rm /wordpress/wp-config-sample.php \
 && mv /wordpress/ /usr/share/wordpress \
 && chown -R www-data:www-data /usr/share/wordpress \
-&& ln -s /usr/share/wordpress /var/www/159.65.67.78/html/wordpress
+&& ln -s /usr/share/wordpress /var/www/localhost/html/wordpress
 
 #ssl
 RUN openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/ssl/private/nginx-selfsigned.key -out /etc/ssl/certs/nginx-selfsigned.crt -config /srcs/server.csr.cnf
