@@ -34,7 +34,7 @@ RUN wget https://files.phpmyadmin.net/phpMyAdmin/4.9.2/phpMyAdmin-4.9.2-english.
 && cp /srcs/config.inc.php /usr/share/phpmyadmin/ && rm /usr/share/phpmyadmin/config.sample.inc.php \
 && service mysql start \
 && mysql < /usr/share/phpmyadmin/sql/create_tables.sql && mysql < /srcs/pma.sql \
-&& ln -s /usr/share/phpmyadmin /var/www/159.65.67.78/html/phpmyadmin \ 
+&& ln -s /usr/share/phpmyadmin /var/www/159.65.67.78/html/phpmyadmin 
 
 #wordpress
 RUN tar zxvf /srcs/wordpress.tar.gz \
